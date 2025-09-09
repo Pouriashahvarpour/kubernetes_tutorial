@@ -24,8 +24,9 @@
      - A **Pod** can host **one** or **more** containers, and these containers share the same network namespace and storage volumes.
      - Containers inside a **Pod** can communicate with each other using `localhost`, as they share the same IP address and port space.
      - Kubernetes manages the lifecycle of Pods, including scaling, self-healing, and upgrades.  
---
 ---
+5. **Declarative vs Imperative in Kubernetes**  
+   - In Kubernetes, we work in a **Declarative** manner, not **Imperative**, which means we define the desired state, and Kubernetes is responsible for bringing the system from its current state to that desired state. In other words, Kubernetes manages *how* the work is done.
 
-8. In Kubernetes, we work in a **Declarative** manner, not **Imperative**; meaning we define the desired state, and Kubernetes is responsible for bringing the system from its current state to the desired state. In other words, Kubernetes manages *how* the work is done.
+
 ---
