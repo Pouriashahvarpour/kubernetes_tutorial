@@ -128,3 +128,45 @@
        podname-7f9cbd8c6d-def34     1/1     Running   0          12m   10.244.2.15   worker-node2   <none>           <none>
        ```
 ---
+9. **Working with Services in Kubernetes**  
+
+   1. **Get information about a Service:**  
+      ```bash
+      kubectl get svc <ServiceName>
+      ```
+
+   2. **What are Services?**  
+      - Services in Kubernetes enable communication between Pods and also between the cluster and the external network.  
+      - Their main role is to receive and route network traffic.  
+
+   3. **Types of Services:**  
+      - **ClusterIP:** Access only within the cluster.  
+      - **LoadBalancer:** External access through a cloud Load Balancer.  
+      - **NodePort:** External access via a static port on cluster nodes.  
+      - **ExternalName:** Maps a Service inside the cluster to an external service.  
+      - **Headless:** Makes each Pod directly accessible without a Load Balancer.  
+
+   4. **Details of Each Service Type:**  
+
+      1. **ClusterIP:**  
+         - Internal communication between Pods (accessible only inside the cluster).  
+
+      2. **LoadBalancer:**  
+         - Provides a public IP to make the Service externally accessible.  
+
+      3. **NodePort:**  
+         - Opens a port in the range `30000–32767` on each node.  
+         - Rarely used in production environments.  
+         - Traffic flow:  
+           > **User → NodePort [Port] → Service [Port] → Pod [targetPort]**  
+
+      4. **ExternalName:**  
+         - Routes in-cluster traffic to an external service.  
+         - DNS name is mapped to a public IP.  
+         - No changes in Kubernetes are needed if the external IP changes.  
+
+      5. **Headless:**  
+         - DNS resolves directly to Pod IPs (no virtual IP).  
+         - Works across the entire cluster.  
+         - Requires updates in configuration if Pod IPs change.  
+---
