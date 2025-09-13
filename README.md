@@ -56,20 +56,75 @@
       kubectl delete pod PodName
       ```
 ---
-7. **Running a Pod Using a Manifest**  
+8. **Managing Pods Using a Deployment**  
 
-   1. The **`apply`** command in Kubernetes is **idempotent**. This means that even if you run it multiple times, as long as the cluster state already matches the manifest, there will be no side effects. Re-running this command will not change the cluster since the resource is already created.  
+   Instead of creating Pods directly, we usually create a **Deployment**, which manages the lifecycle of Pods. This means we no longer need to deal with Pods individually. A Deployment abstracts away the complexity and provides higher-level management features such as **scaling**, **rolling updates**, and **self-healing**.  
 
+   1. **Create a Deployment** named **PodName** with a specified container image:  
       ```bash
-      kubectl apply -f PodName.yaml
-
-      kubectl apply -f PodName1.yaml -f PodName2.yaml
+      kubectl create deployment PodName --image=IMAGE_NAME
       ```
 
-   2. To delete a Pod created with a manifest, use the following command:  
-
+   2. **List all Deployments** to ensure it was created successfully:  
       ```bash
-      kubectl delete -f PodName.yaml
+      kubectl get deployments
       ```
 
+   3. **Get details of a specific Deployment:**  
+      ```bash
+      kubectl get deploy PodName
+      ```
+
+   4. When a Deployment is created, it automatically manages the Pods and assigns labels to them. To view the labels:  
+      ```bash
+      kubectl get deploy PodName -o jsonpath="{.spec.template.metadata.labels}"
+      ```  
+
+      For example, a Deployment may add a label like `app=PodName`. To list Pods with this label:  
+      ```bash
+      kubectl get pods -l app=PodName
+      ```
+
+   5. **Labels** are a core Kubernetes pattern used to connect resources. Controllers like Deployments rely on **label selectors** to manage their Pods.  
+
+   6. **Port-forward traffic** from the Deployment to one of its Pods:  
+      ```bash
+      kubectl port-forward deploy/PodName 8080:80
+      ```  
+      This forwards traffic from `localhost:8080` to port `80` inside the Pod.  
+
+   7. **Delete a Deployment** and all of its managed Pods:  
+      ```bash
+      kubectl delete deploy PodName
+      ```
+
+   8. **Exec into a container** inside a Pod managed by the Deployment:  
+      ```bash
+      ## Exec into a specific container
+      kubectl exec deployment/PodName -c ContainerName -it -- sh
+
+      ## Exec into a Pod directly
+      kubectl exec PodName -it -- /bin/sh
+      ```
+
+   9. **View Pod logs:**  
+      ```bash
+      ## Logs from all containers
+      kubectl logs PodName --tail=5
+
+      ## Logs from a specific container
+      kubectl logs PodName -c ContainerName --tail=5
+      ```
+
+   10. **Get more details** about Pods managed by the Deployment (IP, Node, etc.):  
+       ```bash
+       kubectl get pod -l app=PodName -o wide
+       ```
+
+       Example output:  
+       ```bash
+       NAME                         READY   STATUS    RESTARTS   AGE   IP            NODE           NOMINATED NODE   READINESS GATES
+       podname-7f9cbd8c6d-abc12     1/1     Running   0          12m   10.244.1.23   worker-node1   <none>           <none>
+       podname-7f9cbd8c6d-def34     1/1     Running   0          12m   10.244.2.15   worker-node2   <none>           <none>
+       ```
 ---
