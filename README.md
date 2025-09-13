@@ -170,3 +170,39 @@
          - Works across the entire cluster.  
          - Requires updates in configuration if Pod IPs change.  
 ---
+10. **Namespaces and Pods in Kubernetes:**  
+
+      1. **List Pods in a specific Namespace:**  
+         ```bash
+         kubectl get pod -n <Namespace_Name>
+         ```
+
+      2. **List Services in a specific Namespace:**  
+         ```bash
+         kubectl get svc -n <Namespace_Name>
+         ```
+
+      3. **Create a new Namespace:**  
+         ```bash
+         kubectl create namespace <Namespace_Name>
+         ```
+
+      4. **Create a Pod in a specific Namespace:**  
+         ```bash
+         kubectl apply -f <PodManifest>.yaml -n <Namespace_Name>
+         ```
+
+      5. **Communication between Pods across different Namespaces:**  
+         - By using the IP address of a Pod, it is possible to communicate with it from other Pods in different Namespaces.  
+
+      6. **Access a Service in another Namespace using FQDN (Fully Qualified Domain Name):**  
+         ```bash
+         <ServiceName>.<NamespaceName>.svc.cluster.local
+         ```
+
+         - **<ServiceName>**: Name of the Service  
+         - **<NamespaceName>**: Namespace where the Service is running  
+         - **svc.cluster.local**: Default suffix used for Services in Kubernetes  
+
+         This FQDN allows you to access Services across different Namespaces.  
+---
