@@ -27,6 +27,49 @@
 ---
 5. **Declarative vs Imperative in Kubernetes**  
    - In Kubernetes, we work in a **Declarative** manner, not **Imperative**, which means we define the desired state, and Kubernetes is responsible for bringing the system from its current state to that desired state. In other words, Kubernetes manages *how* the work is done.
+---
+6. **Manually Running a Pod Without a Manifest**  
 
+   1. **Run a Pod manually:**  
+      ```bash
+      kubectl run PodName --image=IMAGE_NAME --restart=Never
+      ```
+
+   2. **List all Pods:**  
+      ```bash
+      kubectl get pod PodName
+      ```
+
+   3. **Get detailed information about a Pod:**  
+      ```bash
+      kubectl describe pod PodName
+      ```
+
+   4. **Get Pod output in different formats (JSON or YAML):**  
+      ```bash
+      kubectl get pod PodName -o json
+      kubectl get pod PodName -o yaml
+      ```
+
+   5. **Delete a Pod:**  
+      ```bash
+      kubectl delete pod PodName
+      ```
+---
+7. **Running a Pod Using a Manifest**  
+
+   1. The **`apply`** command in Kubernetes is **idempotent**. This means that even if you run it multiple times, as long as the cluster state already matches the manifest, there will be no side effects. Re-running this command will not change the cluster since the resource is already created.  
+
+      ```bash
+      kubectl apply -f PodName.yaml
+
+      kubectl apply -f PodName1.yaml -f PodName2.yaml
+      ```
+
+   2. To delete a Pod created with a manifest, use the following command:  
+
+      ```bash
+      kubectl delete -f PodName.yaml
+      ```
 
 ---
