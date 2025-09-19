@@ -240,4 +240,17 @@
          - **svc.cluster.local**: Default suffix used for Services in Kubernetes  
 
          This FQDN allows you to access Services across different Namespaces.  
+      7. **Access a Pod using DNS (with Headless Service):**  
+         
+         ```bash
+         <PodName>.<ServiceName>.<NamespaceName>.svc.cluster.local
+         ```
+
+         - **<PodName>**: Name of the Pod  
+         - **<ServiceName>**: Name of the Headless Service (`clusterIP: None`)  
+         - **<NamespaceName>**: Namespace where the Pod is running  
+         - **svc.cluster.local**: Default suffix used for Services/Pods in Kubernetes  
+
+         This FQDN allows you to access each Pod individually when it is part of a Headless Service (commonly used with StatefulSets).
+
 ---
