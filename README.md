@@ -901,3 +901,75 @@
 
          - **Double Resource Requirement:** Since both Blue and Green versions are available at the same time, more resources are required, as both versions must be running concurrently.
 ---
+26. **Ingress in Kubernetes**
+
+    **Ingress** is an entity in Kubernetes that allows you to configure HTTP and HTTPS routing rules for incoming traffic to services. In other words, **Ingress** acts as an HTTP load balancer at Layer 7 of the OSI model, routing incoming requests (via URLs) to different services within the cluster.
+
+    ### **Ingress Features:**
+
+    1. **Traffic Routing:** You can route incoming traffic to different services based on URLs, headers, and other HTTP information.
+    2. **HTTPS Support:** Ingress can use SSL/TLS to encrypt incoming traffic.
+
+    ### **Creating an SSL/TLS Certificate with OpenSSL**
+
+    To use HTTPS in **Ingress**, you first need an SSL/TLS certificate. This certificate can be created using the `openssl` command. To generate a self-signed certificate for your desired domain (e.g., `Domain.app.local`), use the following command:
+
+    ```bash
+    openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+      -keyout tls.key -out tls.cert \
+      -subj "/CN=Domain.app.local" \
+      -addext "subjectAltName=DNS:Domain.app.local"
+    ```
+
+    #### **Explanation of OpenSSL Command:**
+
+    1. **keyout tls.key:** Path and name of the private key file.
+    2. **out tls.cert:** Path and name of the certificate file.
+    3. **subj "/CN=Domain.app.local":** Sets the domain name for the certificate.
+    4. **addext "subjectAltName=DNS:Domain.app.local":** Adds a Subject Alternative Name (SAN) for the domain.
+
+    This command generates a **self-signed certificate** for the specified domain.
+
+    #### **Creating a Secret for TLS**
+
+    To use the SSL/TLS certificate in **Ingress**, you need to create a **Secret** that contains the certificate and private key. The following command creates a **Secret** from the `tls.key` and `tls.cert` files:
+
+    ```bash
+    kubectl create secret tls <SecretName> --key=tls.key --cert=tls.cert
+    ```
+
+    #### **Explanation of Secret Creation:**
+
+    1. **<SecretName>:** The name you choose for your **Secret**.
+    2. **-key=tls.key:** Path to the private key file.
+    3. **-cert=tls.cert:** Path to the certificate file.
+
+    This command creates a **Secret** named `<SecretName>` that you can use in **Ingress** to configure SSL/TLS.
+
+    #### **Configuring Ingress for TLS Usage**
+
+    To use the **Secret** created in **Ingress**, you should add a configuration like the following:
+
+    ```yaml
+    apiVersion: networking.k8s.io/v1
+    kind: Ingress
+    metadata:
+      name: <ingress-name>
+    spec:
+      tls:
+      - hosts:
+        - "Domain.app.local"
+        secretName: <SecretName>  # The name of the created Secret
+      rules:
+      - host: "Domain.app.local"
+        http:
+          paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: <service-name>
+                port:
+                  number: <service-port>
+    ```
+    This configuration sets up **Ingress** to use the **Secret** for SSL/TLS encryption for the specified domain.
