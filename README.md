@@ -524,3 +524,23 @@
             ```bash
             kubectl delete -f <DirectoryName>/
             ```
+---
+17. **Resource Management in Kubernetes**
+
+      In the **Resource Manager** section, the **Request** and **Limit** values are defined. The **Request** is the initial or typical amount of resources (such as CPU and RAM) that a Pod requests. In contrast, the **Limit** represents the maximum amount of resources that a Pod is allowed to consume. These settings help optimize resource usage and ensure more accurate resource allocation.
+
+      The **Pod scheduling index on Nodes** is determined based on the **Request** value. This means that when resources are allocated on a Node, the priority of allocation is determined by the amount requested by the Pod.
+
+      ### Commands for Checking Resource Usage:
+
+      1. **To check the resource consumption of a Pod:**
+
+         ```bash
+         kubectl top pod
+         ```
+
+      2. **To check the resource consumption of a Node:**
+
+         ```bash
+         kubectl top node
+         ```
