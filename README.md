@@ -782,3 +782,67 @@
                image: <image-name>
                command: ["<command>"]
       ```
+---
+24. **CronJob** in Kubernetes
+
+    A **CronJob** is similar to a **Job**, but it runs automatically at specified intervals. This feature is typically used for performing maintenance tasks (such as backups or compression) at specific times. For example, you might want to run a task every night at 2 AM.
+
+    #### 1. **The `schedule` Field in CronJob:**
+
+    The schedule of a **CronJob** uses the `cron` format, which allows you to specify the exact time when the tasks should run. The format is as follows:
+
+    The meanings of the values are as follows:
+
+    - **min**: Minute (0-59)
+    - **h**: Hour (0-23)
+    - **d**: Day of the month (1-31)
+    - **M**: Month (1-12)
+    - **w**: Day of the week (0-6) (Sunday = 0)
+
+    For example, `schedule: "* * * * *"` means the **CronJob** will run every minute.
+
+    ```bash
+    | **min** | **h** | **d** | **M** | **w** |
+    |---------|-------|-------|-------|-------|
+    | 0-59    | 0-23  | 1-31  | 1-12  | 0-6   |
+    | `*`     | `*`   | `*`   | `*`   | `*`   |
+    ```
+
+    #### 2. **CronJob Example Structure:**
+
+    ```yaml
+    apiVersion: batch/v1
+    kind: CronJob
+    metadata:
+      name: <cronjob-name>
+    spec:
+      schedule: "* * * * *"  
+      jobTemplate:
+        spec:
+          template:
+            spec:
+              containers:
+                - name: <container-name>
+                  image: <image-name>
+                  command: ["<command>"]
+              restartPolicy: Never || OnFailure
+              volumes:
+                - name: <volume-name>
+                  persistentVolumeClaim:
+                    claimName: <pvc-name>
+    ```
+
+    #### 3. **Command to View CronJobs:**
+
+    To view a list of all **CronJobs** in Kubernetes, use the following command:
+
+    ```bash
+    kubectl get cronjob
+    ```
+
+    #### 4. **Important Notes:**
+
+    - **Job:** Used for performing one-off, non-continuous tasks. The pods are terminated after the task is complete.
+    - **CronJob:** Used for performing periodic tasks based on a cron schedule.
+    - **Restart Policy:** Controls the behavior of the pods when a container fails in both **Job** and **CronJob**. The valid values are `Never` and `OnFailure`.
+---
