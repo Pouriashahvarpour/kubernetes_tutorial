@@ -506,3 +506,21 @@
          template:
 
          ```
+---
+   16. **Bulk Operations**
+
+         1. **Apply command in bulk:**
+
+            To apply configurations in bulk, use:
+
+            ```bash
+            kubectl apply -f <DirectoryName>/
+            ```
+
+         2. **Delete command in bulk:**
+
+            To delete resources in bulk, use:
+
+            ```bash
+            kubectl delete -f <DirectoryName>/
+            ```
