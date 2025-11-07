@@ -8,6 +8,43 @@
 ---
 2. **Cluster**
     - A **Cluster** is a logical unit managed by Kubernetes, consisting of one or more servers, each referred to as a **Node**.
+
+   - **Components of a Kubernetes Cluster**
+
+      A **Kubernetes** cluster consists of two main parts: **Worker Nodes** and the **Control Plane** (also known as the master).
+
+   1. ### **Worker Nodes:**
+
+      Worker nodes are the machines on which the pods run. These machines provide the necessary resources to run containers and are responsible for carrying out the heavy lifting of running applications.
+
+      - **Kubeproxy:**
+
+         **Kubeproxy** is a proxy that manages network communication inside the cluster. This component plays a crucial role in routing incoming requests to the appropriate pods and handling network traffic.
+
+      - **Kubectl:**
+
+         **Kubectl** is a command-line tool that acts as a representative of the **Control Plane**. It communicates with the **API Server** to execute administrative commands and manage the cluster.
+
+   2. ### **Control Plane:**
+
+      The control plane (also known as the master) is responsible for managing and overseeing the overall state of the cluster. This section applies **administration** commands to the other nodes and ensures that the cluster's state aligns with the desired state.
+
+      - **Kube-apiserver:**
+
+         **Kube-apiserver** is the primary point of contact with the cluster. This service responds to all cluster requests via the **RESTful API** and manages communication with other components of the cluster.
+
+      - **Scheduler:**
+
+         The **Scheduler** is responsible for launching pods. It allocates resources for the pods based on defined policies (like resource allocation, dependencies, and scalability) and places the pods on appropriate nodes.
+
+      - **Etcd:**
+
+         **Etcd** is a distributed key-value store used to store configuration information and the cluster’s state. This data includes the status of various cluster resources and their configurations.
+
+      - **Controller Manager:**
+
+         The **Controller Manager** monitors the current state of the cluster and compares it with the desired state. This component ensures that all cluster resources are in the desired state and takes corrective actions if necessary (such as launching new pods or removing faulty ones).
+
 ---
 3. **Node**
     - A **Node** in Kubernetes is a physical or virtual machine that runs as part of a Cluster. Each Node contains the necessary resources like CPU, memory, and storage to run containers, and can host Pods. Nodes can be of two types: Master Node (which is responsible for managing and controlling the Cluster) and Worker Node (which runs the actual application workloads by hosting Pods).
