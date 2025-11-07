@@ -1027,3 +1027,74 @@
                   number: <service-port>
     ```
     This configuration sets up **Ingress** to use the **Secret** for SSL/TLS encryption for the specified domain.
+---
+27. **Using Taints and Tolerations**
+      
+      To restrict pods to specific nodes, you can use **Taints** and **Tolerations**:
+      1. **Applying Taint to a Node:**
+         
+            ```bash
+            kubectl taint nodes <NodeName> <key>=<value>:effect
+            ```
+
+            For example, to prevent pods from being scheduled on `node2`:
+
+            ```bash
+            kubectl taint nodes node2 gpu=True:Noschedule
+            ```
+
+      2. **Removing a Taint:**
+
+            To remove a taint, simply append the `-` symbol to the command:
+
+            ```bash
+            kubectl taint nodes node2 gpu=True:Noschedule-
+            ```
+
+      3. **Using Toleration to Allow Pod Scheduling on Tainted Nodes:**
+
+         To allow pods to be scheduled on nodes with a taint, you need to use **Toleration**:
+
+         ```yaml
+         spec:
+            template:
+            spec:
+               tolerations:
+                  - key: "gpu"
+                  operator: "Equal"
+                  value: "true"
+                  effect: "NoSchedule"
+         ```
+
+      4.  **Different Toleration and Taint Effects**
+
+            - **operator**:
+               - **Equal** (default)
+               - **Exists**
+               - **NotEqual**
+            - **effect**:
+               - **NoSchedule**: Pod cannot be scheduled on the node.
+               - **PreferNoSchedule**: Pod is preferred not to be scheduled, but can be scheduled if necessary.
+               - **NoExecute**: If a pod is incompatible with the taint, Kubernetes will evict it.
+
+      5. **Creating and Managing Labels for Nodes**
+
+         You can use **Labels** to manage nodes:
+
+         - **Create a label for nodes:**
+            
+            ```bash
+            kubectl label node <NodeName> key=value
+            ```
+
+         - **View node labels:**
+            
+            ```bash
+            kubectl get node <NodeName> --show-labels
+            ```
+
+         - **Remove a label from a node:**
+            
+            ```bash
+            kubectl label node <NodeName> key-
+            ```
