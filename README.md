@@ -1110,3 +1110,7 @@
 30. **ServiceAccount**
 
       A **ServiceAccount** is an identity that allows pods to communicate with the Kubernetes API.
+---
+31. **DaemonSet**
+
+      A **DaemonSet** is a controller that ensures a pod is running on every node in the cluster. These pods are automatically created and executed on all nodes.
