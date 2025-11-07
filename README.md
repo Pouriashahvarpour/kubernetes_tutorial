@@ -164,6 +164,23 @@
        podname-7f9cbd8c6d-abc12     1/1     Running   0          12m   10.244.1.23   worker-node1   <none>           <none>
        podname-7f9cbd8c6d-def34     1/1     Running   0          12m   10.244.2.15   worker-node2   <none>           <none>
        ```
+   11. **Horizontal Pod Autoscale (HPA)**
+
+         **HPA** automatically adjusts the number of pods based on resource consumption (such as CPU or Memory).
+
+   - **Average Utilization**:
+      - If you set the **averageUtilization** to 50, when the resource consumption reaches 50%, the number of pods will increase or decrease accordingly.
+
+   -   **Specifying Pod Deployment on a Specific Node**
+
+         To specify that pods should be deployed on a specific node, use the `nodeName` attribute:
+
+         ```yaml
+         spec:
+         template:
+            spec:
+               nodeName: <NameOfNode>
+         ```
 ---
 9. **ReplicaSet**
 
