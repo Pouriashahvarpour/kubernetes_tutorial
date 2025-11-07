@@ -254,3 +254,50 @@
          This FQDN allows you to access each Pod individually when it is part of a Headless Service (commonly used with StatefulSets).
 
 ---
+
+12. **Kubernetes ConfigMap Guide**
+
+      1. **Creating a ConfigMap from a custom env file:**
+         ```bash
+         kubectl create configmap <ConfigMap_Name> --from-env-file=<envFilePath>
+         ```
+
+      2. **Viewing the contents of a ConfigMap:**
+         ```bash
+         kubectl describe cm <ConfigMap_Name>
+         ```
+
+      3. **Ways to set environment variables (env):**
+
+         1. **Hardcoded in the `deployment.yaml` file:**
+            - You can directly add environment variables inside the `deployment.yaml` configuration file.
+
+         2. **Using `envFrom`:**
+            - This method allows you to add all keys and values from the ConfigMap as environment variables to the Pod.
+
+            Example:
+
+            ```yaml
+            envFrom:
+            - configMapRef:
+                  name: <ConfigMap_Name>
+            ```
+
+         3. **Using `ValueFrom`:**
+            - If you only want to inject a specific key from the ConfigMap into the environment variable in the Pod, use `ValueFrom`:
+
+            ```yaml
+            env:
+            - name: <Value_Name>
+               valueFrom:
+                  configMapKeyRef:
+                  name: <ConfigMap_Name>
+                  key: <Value_Name_on_ConfigMap>
+            ```
+
+      4. **Viewing the output of a file without applying changes (Dry Run):**
+         - If you want to see the output of a file without making any changes or creating new resources, use the `--dry-run=client` option:
+
+         ```bash
+         kubectl create -f <file.yaml> --dry-run=client
+         ```
