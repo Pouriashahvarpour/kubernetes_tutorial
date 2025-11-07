@@ -1107,3 +1107,6 @@
       - **Role**: Defines access within a specific **namespace**.
       - **ClusterRole**: Defines access across the entire cluster.
 ---
+30. **ServiceAccount**
+
+      A **ServiceAccount** is an identity that allows pods to communicate with the Kubernetes API.
