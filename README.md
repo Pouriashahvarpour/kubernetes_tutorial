@@ -492,6 +492,17 @@
          kubectl get storageclass <StorageClass_Name> -oyaml
          ```
 
-      ---
+---
+   15. **Horizontal Scaling (HS)**
 
+         To avoid downtime or breakpoints, you should use **Horizontal Scaling**. To implement HS, we increase the number of Replicas.
 
+         **Example in YAML:**
+
+         ```yaml
+         spec:
+         replicas: <Number_Of_Replicas>
+
+         template:
+
+         ```
