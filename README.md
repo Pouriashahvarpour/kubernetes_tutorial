@@ -625,3 +625,22 @@
       ### Use Cases for Init Containers:
       - **Environment Setup:** Used for tasks like loading configuration files, setting up environment variables, or ensuring external dependencies are available.
       - **Testing or Validation:** Running tests or validations before the main container starts (e.g., checking if a database is reachable before starting a service).
+---
+20. **Stateless App** vs **Stateful App**
+
+      1. **Stateless App:**
+         - **Characteristics:**
+         - **Stateless** apps do not store information related to previous user states or activities. In other words, the required information is available with each request, and these apps do not store any data persistently.
+         - These apps do not depend on any specific state and function independently with every request.
+         
+         - **Advantages:**
+         - Since these apps do not rely on any specific state, they are easily replaceable and **interchangeable** when **scaling** or using a **Load Balancer**.
+
+       2. **Stateful App:**
+
+            - **Characteristics:**
+            - **Stateful** apps store information sent to them and use that data for subsequent processing. Typically, these types of apps require a database or persistent storage.
+            - These apps need data storage to retain their state across requests.
+            
+               - **Not Suitable for Deployment:** These apps are generally not suited for **Deployment** because **Deployment** is designed for **Stateless Apps** by default.
+               - **Pods of a Stateful App** are not interchangeable and cannot be replaced with each other. Hence, **Deployment** is not ideal for managing such apps.
