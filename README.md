@@ -644,3 +644,35 @@
             
                - **Not Suitable for Deployment:** These apps are generally not suited for **Deployment** because **Deployment** is designed for **Stateless Apps** by default.
                - **Pods of a Stateful App** are not interchangeable and cannot be replaced with each other. Hence, **Deployment** is not ideal for managing such apps.
+---
+21. **StatefulSet** in Kubernetes
+
+      **StatefulSet** is a controller in Kubernetes specifically designed for managing and scaling **Stateful Apps**. This controller is responsible for managing Stateful pods and their persistent storage.
+
+      ### Features and Capabilities of **StatefulSet**:
+      1. **Scaling and Pod Management:** 
+         - **StatefulSet** is designed for apps that require long-term storage of data.
+         - This controller is used for managing pods, assigning unique identities to each pod, and managing large volumes of data.
+
+      2. **Unique Identity for Each Pod:**
+         - In **StatefulSet**, each pod is assigned a unique identity, allowing distinct communication with each pod.
+         - These identities are accessible via a **DNS** mechanism.
+
+      3. **Headless Service:**
+         - For using **StatefulSet**, you must define a **Headless Service** (without a fixed IP) so you can communicate with each pod in the **StatefulSet** through DNS names.
+
+      4. **Best Practices:**
+         - When defining a **StatefulSet**, it is recommended to set the `terminationGracePeriodSeconds` variable so that pods have enough time to save data or complete necessary operations before deletion.
+         
+         ```yaml
+         terminationGracePeriodSeconds: <time>
+         ```
+
+      5. **Leader-Follower Mechanism:**
+         - In this mechanism, one pod is designated as the **Leader**, and only the **Leader** pod can read and write data. Other pods, called **Followers**, only have read access.
+         - When the **Leader** pod is updated, the **Follower** pods automatically sync their data.
+
+      6. **VolumeClaimTemplate:**
+         - This feature allows you to define a separate **Persistent Volume Claim** (PVC) for each pod in the **StatefulSet**.
+         - This allows each pod to store its data in a specific volume, ensuring data persistence.
+         - In case the pods in the **StatefulSet** are deleted, PVCs defined through the **VolumeClaimTemplate** remain intact. This is an important feature of **StatefulSet**, which ensures data persistence even if pods are deleted.
