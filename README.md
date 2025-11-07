@@ -846,3 +846,58 @@
     - **CronJob:** Used for performing periodic tasks based on a cron schedule.
     - **Restart Policy:** Controls the behavior of the pods when a container fails in both **Job** and **CronJob**. The valid values are `Never` and `OnFailure`.
 ---
+25. **Update Strategy**
+      1. ### **Rollout Strategy**
+
+         In the **Rollout Strategy**, when your application has multiple versions available to users, this strategy allows you to gradually replace the old version pods with the new version pods. First, one pod of the new version is launched in place of the old pod, and then subsequent pods will be replaced by the new version. This process happens gradually and without downtime.
+
+         ### **Advantages:**
+
+         - **No Downtime:** Since the pods are replaced gradually, there is no downtime for the service’s availability.
+
+         ### **Challenges:**
+
+         - **Version Compatibility:** One challenge is that both the old and new version pods need to be able to run simultaneously without conflicts. Otherwise, issues like conflicts in configurations or APIs between the old and new versions might arise.
+
+         By default, Kubernetes uses **Rollout** to manage update strategies.
+
+         ### **Command to Check Rollout Status:**
+
+         To check the status of the **Rollout** process, use the following command:
+
+         ```bash
+         kubectl rollout status statefulset/<app-name>
+         ```
+
+         In **StatefulSets**, the **Rollout** process happens from the last Replica to the first Replica (i.e., from bottom to top).
+
+         ### **Command for Rollback:**
+
+         To roll back to the previous version, use the following command:
+
+         ```bash
+         kubectl rollout undo statefulset/<app-name>
+         ```
+
+         Also, Kubernetes keeps the last two versions of the application in memory by default.
+
+
+      2. ### **Blue/Green Strategy**
+
+         In the **Blue/Green Strategy**, there are two versions of the service:
+
+         - **Blue:** The current version of the service that receives user traffic.
+         - **Green:** The new version of the service that is launched alongside the Blue version, but no traffic is sent to it until it’s ready.
+
+         Once the **Green** version is ready, the Load Balancer switches traffic to it, and the new service fully replaces the old service.
+
+         ### **Advantages:**
+
+         - **Zero Downtime:** Since both the Blue and Green services are available at the same time, there is no downtime in service access.
+         - **Version Compatibility:** The new version doesn’t have to be fully compatible with the old version. You can test and deploy new versions without worrying about incompatibilities.
+         - **Rollback to Previous Version:** If there’s an issue with the transition from Blue to Green, you can use the **LoadBalancer** to redirect traffic back to Blue and revert to the old version.
+
+         ### **Disadvantages:**
+
+         - **Double Resource Requirement:** Since both Blue and Green versions are available at the same time, more resources are required, as both versions must be running concurrently.
+---
