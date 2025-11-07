@@ -1102,4 +1102,8 @@
 28.  **Using NetworkPolicy for Network Restrictions**
 
       To apply network restrictions on services, you can use **NetworkPolicy**. It allows you to set up rules for incoming (Ingress) and outgoing (Egress) traffic for your pods.
-
+---
+29. **Roles and ClusterRoles**
+      - **Role**: Defines access within a specific **namespace**.
+      - **ClusterRole**: Defines access across the entire cluster.
+---
