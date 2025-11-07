@@ -594,3 +594,34 @@
 
       3. **Flexibility in Feature Implementation:**
          - Features like security, monitoring, or logging can be added without requiring changes to the main service.
+---
+19. **Init Containers in Kubernetes**
+
+      **Init Containers** are special containers that run before the main containers in a Pod. They are responsible for preparing the environment and performing initial tasks, such as loading data, setting configurations, or running tests.
+
+      ### Key Points about Init Containers:
+
+      - **Guarantee by Kubernetes:**
+         - Kubernetes ensures that all **Init Containers** are executed successfully before the main container starts. Once all Init Containers have completed successfully, the main container will be launched.
+      
+      - **Sequential Execution:**
+         - Init Containers are executed one by one, in sequence. Each **Init Container** will only start once the previous one has completed successfully.
+
+      - **Parallel Execution for Main Containers:**
+         - In contrast, **Containers** in a Pod run in parallel, meaning all containers inside the Pod will start at the same time.
+
+      ### Example Spec for Init Containers:
+
+      ```yaml
+      spec:
+      initContainers:
+         - name: <init-container-name>  
+            image: <image-name>          
+      containers:
+         - name: <container-name>     
+            image: <image-name>         
+      ```
+
+      ### Use Cases for Init Containers:
+      - **Environment Setup:** Used for tasks like loading configuration files, setting up environment variables, or ensuring external dependencies are available.
+      - **Testing or Validation:** Running tests or validations before the main container starts (e.g., checking if a database is reachable before starting a service).
