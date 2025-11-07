@@ -676,3 +676,73 @@
          - This feature allows you to define a separate **Persistent Volume Claim** (PVC) for each pod in the **StatefulSet**.
          - This allows each pod to store its data in a specific volume, ensuring data persistence.
          - In case the pods in the **StatefulSet** are deleted, PVCs defined through the **VolumeClaimTemplate** remain intact. This is an important feature of **StatefulSet**, which ensures data persistence even if pods are deleted.
+---
+22. **Liveness & Readiness Probes in Kubernetes**
+
+      **Liveness & Readiness Probes** are essential tools in Kubernetes for monitoring container health. These probes allow Kubernetes to check whether containers in a pod are healthy and ready to receive traffic.
+
+      #### 1. **Liveness Probe:**
+      - The **Liveness Probe** checks if a container is still running properly. If the probe fails, Kubernetes restarts the container to ensure that the service stays available.
+      - The probe can be configured to perform an **exec** command or use an HTTP request to check the container’s health.
+
+      #### 2. **Readiness Probe:**
+      - The **Readiness Probe** checks if a container is ready to handle requests. If the probe fails, Kubernetes removes the pod from the pool of available resources, stopping traffic from being routed to it until the container is ready again.
+
+      #### 3. **Key Differences Between Liveness and Readiness Probes:**
+      1. **Liveness Probe:**
+         - If the probe fails, the container is restarted.
+         - Useful for detecting situations where the container is running but stuck in an unhealthy state.
+      2. **Readiness Probe:**
+         - If the probe fails, the container is temporarily removed from traffic.
+         - Useful for scenarios where the container is running but needs time to initialize or wait for external dependencies, such as a database connection.
+
+      #### 4. **Configuring Liveness and Readiness Probes:**
+      - Kubernetes allows you to configure both probes to specify how they should check the health and readiness of containers.
+
+         Example configuration:
+
+         ```yaml
+         spec:
+         initContainers:
+            - name: <init-container-name>
+               # Other init container settings
+
+         containers:
+            - name: <container-name>
+               volumeMounts:
+               - name: <volume-name>
+                  mountPath: <mount-path>
+               resources:
+               limits:
+                  memory: "512Mi"
+                  cpu: "1"
+               requests:
+                  memory: "256Mi"
+                  cpu: "0.5"
+
+               livenessProbe:
+               exec:
+                  command:
+                     - <command-to-check-liveness>
+               initialDelaySeconds: 5
+               periodSeconds: 5
+               failureThreshold: 3
+
+               readinessProbe:
+               exec:
+                  command:
+                     - <command-to-check-readiness>
+               initialDelaySeconds: 5
+               periodSeconds: 5
+               failureThreshold: 3
+         ```
+         #### 5. **Leader-Follower Mechanism:**
+
+         - In this mechanism, one pod is designated as the **Leader**, and only the **Leader** pod can read and write data. Other pods, called **Followers**, only have read access.
+         - When the **Leader** pod is updated, the **Follower** pods automatically sync their data.
+
+         ### 6. **VolumeClaimTemplate:**
+
+         - This feature allows you to define a separate **Persistent Volume Claim** (PVC) for each pod in the **StatefulSet**.
+         - This allows each pod to store its data in a specific volume, ensuring data persistence.
+         - In case the pods in the **StatefulSet** are deleted, PVCs defined through the **VolumeClaimTemplate** remain intact. This is an important feature of **StatefulSet**, which ensures data persistence even if pods are deleted.
