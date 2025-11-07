@@ -367,3 +367,131 @@
          - For example:
             - `0400` → Readable only by the owner
             - `0444` → Readable by everyone
+---
+ 14. **Volume in Kubernetes**
+
+      A **Volume** is a storage space allocated to containers. Using Volumes allows data to be stored outside the container lifecycle, ensuring data persistence even if the container itself is destroyed or replaced.
+
+      ### Common Types of Volumes:
+
+      - **EmptyDir**
+      - **HostPath**
+      - **Persistent Volume (PV / PVC)**
+
+      ### 1. **EmptyDir**
+
+      - **Feature:** It is not dependent on the container's lifecycle but on the Pod's lifecycle.
+      - **Important Note:**
+         - If a Pod **crashes** or is **replaced**, the data persists.
+         - If the Pod is **deleted**, the data is also deleted.
+      - Therefore, it is called **pod-wide storage**.
+      - **Use Case:** Suitable for temporary data such as **caches** or files that do not require permanent persistence.
+
+         **Example definition in YAML file:**
+
+         ```yaml
+         containers:
+         - name: <container_name>
+            volumeMounts:
+               - name: <emptydir_volume_name>
+               mountPath: <container_path>
+
+         volumes:
+         - name: <emptydir_volume_name>
+            emptyDir: {}   # Volume type
+         ```
+
+      ### 2. **HostPath**
+
+      - **Feature:** Data is stored on a Node (node-wide storage).
+      - It is not dependent on the Pod's lifecycle. This means if the Pod **crashes**, **replaces**, or is **deleted**, the data will persist on the Node, and any new Pod created on the same Node will still have access to the data.
+      - **Important Note:** `HostPath` ties the data to a specific Node. If the Pod is scheduled on a different Node, it will not have access to this data.
+
+         **HostPath Type Values:**
+
+         - `Directory`: The path must already exist on the Node.
+         - `DirectoryOrCreate`: If the path does not exist, it will be created automatically.
+
+         **Example definition in YAML file:**
+
+         ```yaml
+         containers:
+         - name: <container_name>
+            volumeMounts:
+               - name: <hostpath_volume_name>
+               mountPath: <container_path>
+
+         volumes:
+         - name: <hostpath_volume_name>
+            hostPath:        # Volume type
+               path: <Node_path>
+               type: Directory  # Or DirectoryOrCreate
+         ```
+
+      ### 3. **Persistent Volume (PV)**
+
+      A **Persistent Volume (PV)** is a real storage space that resides on a physical disk, providing durable storage outside of the lifecycle of Pods.
+
+      ### 4. **Persistent Volume Claim (PVC)**
+
+      - A **Persistent Volume Claim (PVC)** is a request for storage by a user (Pod). It specifies certain access permissions and size requirements. It's important to note that PVCs are not always fulfilled immediately
+      When a Persistent Volume Claim (PVC) and a Persistent Volume (PV) are bound together, it is said that they are **"bound"**.
+
+      ### Types of PVC Access Modes:
+
+      1. **ReadWriteOnce:**
+         - This permission means that only one node or server can read from and write to the volume at the same time. It is also possible for a Pod to read and write simultaneously.
+
+      2. **ReadOnlyMany:**
+         - Multiple Pods can simultaneously **read** from the volume, but cannot write to it.
+
+      3. **ReadWriteMany:**
+         - Multiple Pods and Nodes can read from and write to the volume at the same time.
+
+      4. **ReadWriteOncePod:**
+         - This permission is specific to a single Pod. Only that Pod can read and write to the volume.
+
+       **StorageClass:**
+
+      The `StorageClass` allows dynamic provisioning of storage. It enables clients to request specific storage configurations and define parameters, such as performance, through the StorageClass.
+
+      **Example definition in YAML file:**
+
+      ```yaml
+      containers:
+      - name: <container_name>  # Define container name
+         volumeMounts:
+            - name: <pvc_vol_Name>
+            mountPath: <container_path>
+
+      volumes:
+      - name: <pvc_vol_Name>
+         PersistentVolumeClaim: # Volume type
+            claimName: <PVC_Metadata_name>
+      ```
+
+      **PVC_Metadata_name:** The name of the PVC metadata that we want to connect to.
+
+      ### Commands for PVC:
+
+      1. **Get PVCs:**
+         
+         ```bash
+         kubectl get pvc
+         ```
+
+      2. **Get Storage Classes:**
+         
+         ```bash
+         kubectl get storageclass
+         ```
+
+      3. **View the YAML configuration of a specific Storage Class:**
+         
+         ```bash
+         kubectl get storageclass <StorageClass_Name> -oyaml
+         ```
+
+      ---
+
+
