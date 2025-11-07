@@ -741,8 +741,44 @@
          - In this mechanism, one pod is designated as the **Leader**, and only the **Leader** pod can read and write data. Other pods, called **Followers**, only have read access.
          - When the **Leader** pod is updated, the **Follower** pods automatically sync their data.
 
-         ### 6. **VolumeClaimTemplate:**
+         #### 6. **VolumeClaimTemplate:**
 
          - This feature allows you to define a separate **Persistent Volume Claim** (PVC) for each pod in the **StatefulSet**.
          - This allows each pod to store its data in a specific volume, ensuring data persistence.
          - In case the pods in the **StatefulSet** are deleted, PVCs defined through the **VolumeClaimTemplate** remain intact. This is an important feature of **StatefulSet**, which ensures data persistence even if pods are deleted.
+---
+23. **Job** in Kubernetes
+
+      A **Job** is an entity in Kubernetes designed to run one or more pods. These pods do not need to run continuously; instead, they terminate as soon as they complete a specific task. In other words, a **Job** is responsible for completing a task, and after the task is finished, the pods are terminated.
+
+       #### 1. **Difference Between Job and Deployment:**
+
+      - While a **Deployment** is designed to run pods continuously and keep restarting them, a **Job** is used for running one-off (non-continuous) tasks.
+      - **Job** removes the pods once its task is complete.
+
+      #### 2. **The `apiVersion` for Job:**
+
+      According to the official Kubernetes documentation, the `apiVersion` for a **Job** is `batch/v1`.
+
+      #### 3. **The `restartPolicy` in the Pod Template Spec:**
+      In a **Job**, there are two valid values for `restartPolicy`:
+
+      - **Never**: This means that if the container inside the pod crashes, no attempt will be made to restart the pod.
+      - **OnFailure**: In this case, if the container exits with a non-zero (failure) exit code, it will be restarted. This is done in the hope that restarting the container will resolve the issue.
+
+      #### **Job Example Structure:**
+
+      ```yaml
+      apiVersion: batch/v1
+      kind: Job
+      metadata:
+      name: <job-name>
+      spec:
+      template:
+         spec:
+            restartPolicy: Never || OnFailure
+            containers:
+            - name: <container-name>
+               image: <image-name>
+               command: ["<command>"]
+      ```
