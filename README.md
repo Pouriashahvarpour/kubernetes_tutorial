@@ -301,3 +301,69 @@
          ```bash
          kubectl create -f <file.yaml> --dry-run=client
          ```
+---
+13. **Secrets in Kubernetes**
+
+      `Secret` files are used to store sensitive information (such as passwords, keys, and tokens). This entity is very similar to a `ConfigMap`, but the main difference lies in the confidentiality of the data.
+
+      ### Important notes about Secrets:
+
+      - The default **type** in Secrets is **Opaque**.
+         
+         This is commonly used for storing usernames and passwords. The data is defined in **Base64 encoded** format.
+         
+      - In the `secret.yaml` file, the **data** section must have values encoded in Base64.
+      - In **Production** environments, the actual password (even if Base64 encoded) should **not** be stored in source control (e.g., Git).
+
+      ### Common Commands:
+
+      1. **Create a Secret from a YAML file:**
+         
+         ```bash
+         kubectl apply -f <Secret_File>.yaml
+         ```
+         
+      2. **List all Secrets:**
+         
+         ```bash
+         kubectl get secret
+         ```
+         
+      3. **View details of a specific Secret:**
+         
+         ```bash
+         kubectl describe secret <Secret_Name>
+         ```
+
+         > **Key difference from ConfigMap:**
+         > 
+         > In the `describe` command for `ConfigMap`, the data content is displayed, but for `Secret`, due to confidentiality, the data is **not** shown.
+
+         ### 4. Connecting a Secret to a Deployment using Volumes:
+
+         To use a Secret in a Pod (for example, mounting secret files into the container), follow this configuration in your `deployment.yaml`:
+
+         ```yaml
+         containers:
+         - name: <container_name>   # Container name
+            volumeMounts:
+               - name: <secret_volume_name>
+               mountPath: <container_path>
+               readOnly: true   # Only read access
+
+         volumes:
+         - name: <secret_volume_name>
+            secret:
+               secretName: <object_secret_name>
+               defaultMode: 0400   # Similar to chmod file access permissions
+         ```
+
+         ---
+
+         ### Explanation of `defaultMode`:
+
+         - The **three rightmost digits** specify the file access permissions (like `chmod`).
+         - The **leftmost digit** (usually 0) is to preserve the octal structure.
+         - For example:
+            - `0400` → Readable only by the owner
+            - `0444` → Readable by everyone
