@@ -1098,3 +1098,8 @@
             ```bash
             kubectl label node <NodeName> key-
             ```
+---
+28.  **Using NetworkPolicy for Network Restrictions**
+
+      To apply network restrictions on services, you can use **NetworkPolicy**. It allows you to set up rules for incoming (Ingress) and outgoing (Egress) traffic for your pods.
+
